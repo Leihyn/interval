@@ -4,6 +4,8 @@ const URL = process.env.DEMO_URL ?? "https://fearless-swordfish-992.convex.site"
 const W = 1280, H = 720;
 const log = (m) => console.log(`  ${m}`);
 
+const T0 = { t: 0 };
+const cues = [];
 const browser = await chromium.launch();
 const context = await browser.newContext({
   viewport: { width: W, height: H },
@@ -12,6 +14,9 @@ const context = await browser.newContext({
 const page = await context.newPage();
 
 async function caption(text, ms = 4200) {
+  // Record when each caption appears, so narration can be placed on exactly
+  // the same timeline rather than guessed at.
+  cues.push({ at: Date.now() - T0.t, text });
   await page.evaluate((t) => {
     let d = document.getElementById("__cap");
     if (!d) {
@@ -57,6 +62,7 @@ async function reply(text, capBefore, capAfter) {
   await caption(capAfter, 5200);
 }
 
+T0.t = Date.now();
 log(`recording ${URL}`);
 await page.goto(URL, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(2500);
@@ -129,3 +135,4 @@ await context.close();
 await browser.close();
 const file = await page.video().path();
 console.log(`VIDEO:${file}`);
+console.log(`CUES:${JSON.stringify(cues)}`);

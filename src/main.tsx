@@ -1,9 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { ConvexProvider, ConvexReactClient } from "convex/react";
+import App from "./App.tsx";
+import Setup from "./Setup.tsx";
+import "./App.css";
 
-createRoot(document.getElementById('root')!).render(
+const url = import.meta.env.VITE_CONVEX_URL as string | undefined;
+
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    {url ? (
+      <ConvexProvider client={new ConvexReactClient(url)}>
+        <App />
+      </ConvexProvider>
+    ) : (
+      <Setup />
+    )}
   </StrictMode>,
-)
+);

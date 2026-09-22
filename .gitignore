@@ -26,3 +26,8 @@ dist-ssr
 # Convex
 .env.local
 .convex/
+
+# Convex agent tooling (installed locally by `convex ai-files install`, ~456K)
+.agents/
+.claude/
+skills-lock.json

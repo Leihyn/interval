@@ -21,6 +21,7 @@ import type * as parse from "../parse.js";
 import type * as patients from "../patients.js";
 import type * as replies from "../replies.js";
 import type * as seed from "../seed.js";
+import type * as thresholds from "../thresholds.js";
 import type * as triage from "../triage.js";
 
 import type {
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   patients: typeof patients;
   replies: typeof replies;
   seed: typeof seed;
+  thresholds: typeof thresholds;
   triage: typeof triage;
 }>;
 

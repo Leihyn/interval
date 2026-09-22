@@ -233,8 +233,12 @@ function Items({ patientId }: { patientId: Id<"patients"> }) {
       const r = await issue({ itemId });
       setSent(r.sent ? "Emailed to the patient." : `Issued, but the send failed: ${r.detail ?? "unknown"}`);
     } catch (err) {
-      // The gate lives in the mutation, so this is the real refusal.
-      setError(err instanceof Error ? err.message : String(err));
+      // The gate lives in the mutation, so this is the real refusal. A
+      // ConvexError carries its message through to the client in `data`.
+      const data = (err as { data?: unknown })?.data;
+      setError(
+        typeof data === "string" ? data : err instanceof Error ? err.message : String(err),
+      );
     }
   }
 

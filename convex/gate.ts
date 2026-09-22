@@ -5,9 +5,16 @@
  * is enforced here rather than by hiding a button.
  */
 
+import { ConvexError } from "convex/values";
+
 export type Sendable = { status: "draft" | "approved" | "issued"; title: string };
 
-export class NotApproved extends Error {
+/**
+ * ConvexError, not Error. Convex strips a plain Error's message in production
+ * and the client sees "Server Error", which makes a deliberate refusal look
+ * like a crash. The whole point of this gate is that the clinician is told why.
+ */
+export class NotApproved extends ConvexError<string> {
   constructor(title: string, status: string) {
     super(`"${title}" is ${status} and has not been approved by a clinician. It cannot be sent.`);
     this.name = "NotApproved";

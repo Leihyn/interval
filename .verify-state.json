@@ -1,0 +1,251 @@
+{
+  "status": "blocked",
+  "mode": "preflight",
+  "autonomous_mode": false,
+  "runDate": "2026-09-22T13:49:00.893712+00:00",
+  "winnerReadiness": 47,
+  "maxScore": 100,
+  "overallStatus": "DO NOT SUBMIT",
+  "recommendation": "BLOCKED. 3 kill-zones (KZ-2, KZ-4, KZ-5), EMERGENCY escalation. Zero partner integrations violates the stated eligibility requirement; submission description claims 3 integrations that do not exist. Fixable in remaining time only if a partner API key is available immediately.",
+  "blocked_reason": "KZ-2 submission incomplete (no public URL, no public repo, no video), KZ-4 three claimed sponsors at 0/4 ABCD, KZ-5 eligibility violation on the partner-integration requirement",
+  "killZones": {
+    "kz1_demo_reliability": "CLEAR",
+    "kz1_condition": "5/5 passed on the backend flow against a LOCAL deployment via CLI. Judge-facing browser flow on a public URL never exercised. Must re-run in a browser against the deployed convex.site URL before submitting.",
+    "kz2_submission_completeness": "TRIGGERED",
+    "kz3_contract_wrong_network": "N/A",
+    "kz4_sponsor_integration": "TRIGGERED",
+    "kz4_condition": "OpenAI 0/4, Firecrawl 0/4, AgentMail 0/4. Convex 4/4.",
+    "kz5_eligibility_compliance": "TRIGGERED",
+    "kz5_reason": "Official rule: 'Each submission must include Convex and use hackathon cohost or partner integrations.' Zero partner integrations. Also 'All GitHub repos must be public to qualify' and no repo exists."
+  },
+  "facets": {
+    "f1_demo_reliability": {
+      "score": 15,
+      "max": 25,
+      "notes": "5/5 five-run test passed on the backend flow, each from a clean reseed. Base cut to 20 for substitute flow (CLI not browser), -3 endpoint is 127.0.0.1 with no deployed env, -2 console errors unverifiable (Chrome extension unresponsive)."
+    },
+    "f2_submission_completeness": {
+      "score": 5,
+      "max": 20,
+      "notes": "4 required fields have no content: App Website Link, GitHub Repo URL, Video Demo, Screenshot. Prose fields all drafted and good."
+    },
+    "f3_sponsor_integration": {
+      "score": 5,
+      "max": 20,
+      "notes": "4 sponsors claimed at 5 pts each. Convex 4/4 ABCD = 5. OpenAI/Firecrawl/AgentMail all 0/4 = 0. Deps are convex, static-hosting, react, react-dom only."
+    },
+    "f4_technical_correctness": {
+      "score": 11,
+      "max": 15,
+      "notes": "65/65 tests pass, tsc -b and vite build clean, committed source free of localhost. No deployment exists."
+    },
+    "f5_narrative_quality": {
+      "score": 6,
+      "max": 10,
+      "notes": "Problem statement 3/3, genuinely strong. Sponsor fit 0/2, the justification describes integrations that do not exist. 5.3 adapted from 'why blockchain' to 'why this stack'."
+    },
+    "f6_eligibility_compliance": {
+      "score": 3,
+      "max": 5,
+      "notes": "Solo OK, first commit 2026-09-12 after the 25 Aug cutoff. Partner-integration requirement violated. vibeapps.dev registration unconfirmed."
+    },
+    "f7_code_quality": {
+      "score": 2,
+      "max": 3,
+      "notes": "No secrets tracked, no console.log. README is still the default Vite template."
+    },
+    "f8_presentation_assets": {
+      "score": 0,
+      "max": 2,
+      "notes": "No video (mandatory, under 3 min), no screenshots, no cover image."
+    }
+  },
+  "sponsors": {
+    "Convex": {
+      "abcd": "4/4",
+      "score": 5,
+      "max": 5,
+      "evidence": "schema+indexes, queries, mutations, httpRouter+httpAction, live useQuery subscriptions, static-hosting component"
+    },
+    "OpenAI": {
+      "abcd": "0/4",
+      "score": 0,
+      "max": 5,
+      "evidence": "1 source reference, a comment in convex/parse.ts. No dep, no SDK, no call."
+    },
+    "Firecrawl": {
+      "abcd": "0/4",
+      "score": 0,
+      "max": 5,
+      "evidence": "0 references in source. Citations in seed.ts are hand-typed NICE URLs."
+    },
+    "AgentMail": {
+      "abcd": "0/4",
+      "score": 0,
+      "max": 5,
+      "evidence": "3 references: a route path string and comments. No dep, no SDK, no email sent or received."
+    }
+  },
+  "blockers": [
+    "KZ-5: zero partner integrations violates 'must include Convex and use hackathon cohost or partner integrations'",
+    "KZ-2: no convex.site URL (blocked on npx convex login)",
+    "KZ-2: no public GitHub repo (no remote configured)",
+    "KZ-2: no demo video (mandatory, under 3 minutes)",
+    "KZ-4: submission Description claims OpenAI, Firecrawl and AgentMail integrations that do not exist"
+  ],
+  "triage_order": [
+    "1. One real partner integration (OpenAI cheapest, parse.ts seam already exists) - eligibility, binary",
+    "2. Deploy to convex.site + create public repo - eligibility",
+    "3. Rewrite Description to match what is built - integrity",
+    "4. Demo video under 3 min - mandatory field",
+    "5. Screenshots + README rewrite"
+  ],
+  "milestones": [],
+  "buildVerification": {
+    "contractAddresses": {},
+    "deviationCount": 0,
+    "knownRiskCount": 0
+  },
+  "debugIntegration": {
+    "confidenceScore": null,
+    "unresolvedCount": null,
+    "testCoverage": null
+  },
+  "contractAddresses": {},
+  "downstream_items": {
+    "open": 0,
+    "done": 0,
+    "waived": 0,
+    "unactioned_p1": [],
+    "unactioned_p2": [],
+    "note": "No PULSE Downstream Items ledger existed"
+  },
+  "winningPatternChecks": {
+    "wp1_landing": {
+      "status": "WARN",
+      "detail": "No live URL, could not screenshot"
+    },
+    "wp2_testRatio": {
+      "status": "FAIL",
+      "ratio": 0.29,
+      "detail": "4 test files / 14 source files. Misleading: those 4 files hold 65 tests covering the whole safety surface."
+    },
+    "wp3_multiTrack": {
+      "status": "WARN",
+      "realTracks": 1,
+      "claimedTracks": 4
+    },
+    "wp4_submissionDir": {
+      "status": "FAIL",
+      "detail": "submission/ absent"
+    },
+    "wp5_readmeStory": {
+      "status": "FAIL",
+      "detail": "README.md is still the default Vite template"
+    }
+  },
+  "post_build_critique": {
+    "elevations_implemented": 0,
+    "elevations_missing": [
+      "SKIPPED: no .critique-state.json"
+    ],
+    "p0_built_and_tested": 4,
+    "p0_total": 10,
+    "p0_score": 40,
+    "decision": "DO-NOT-SUBMIT",
+    "note": "Degraded: no PRD.md, used the 10 MUSTs from interval-build-plan.md as the P0 substitute",
+    "thesis_gate": "SKIPPED: no WINNER-BRIEF.md"
+  },
+  "observable_score": null,
+  "observable_grade": "SKIPPED",
+  "observable_results": [],
+  "fallback_active_features": [],
+  "degraded_inputs": [
+    "PULSE.md",
+    ".conductor-state.json",
+    ".build-state.json",
+    ".debug-state.json",
+    ".critique-state.json",
+    "PRD.md",
+    "ARCHITECTURE.md",
+    "FEATURE-OBSERVABLES.md",
+    "hackathon brief",
+    "browser access"
+  ],
+  "context_percentage": 0,
+  "errors": [
+    "Chrome extension unresponsive after 2 attempts: F1 console-error check and UI render verification could not be executed"
+  ],
+  "phase_ledger": [
+    {
+      "phase": "setup",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "No .verify-state.json, no .conductor-state.json; warned and proceeded out of pipeline; 3 reference files loaded"
+    },
+    {
+      "phase": "milestone_history",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "milestones array empty - no prior milestone checks"
+    },
+    {
+      "phase": "f1_demo_reliability",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "5/5 PASS COUNT from /tmp/claude-501/fiverun.sh, each run reseeded"
+    },
+    {
+      "phase": "f2_submission_completeness",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "interval-submission.md read; official rules fetched from convex.dev/hackathons/all-gas; 4 required fields empty"
+    },
+    {
+      "phase": "f3_sponsor_integration",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "grep counts: openai 1 file, firecrawl 0, agentmail 3; package.json deps confirm no sponsor SDKs"
+    },
+    {
+      "phase": "f4_technical_correctness",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "65/65 tests pass; vite build clean; git grep localhost in src/convex returns nothing"
+    },
+    {
+      "phase": "f5_narrative_quality",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "Scored against interval-submission.md Description; 5.3 adapted for a non-blockchain hackathon"
+    },
+    {
+      "phase": "f6_eligibility_compliance",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "first commit 2026-09-12; official rule on partner integrations quoted verbatim; no git remote"
+    },
+    {
+      "phase": "f7_code_quality",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "0 env files tracked, 0 console.log, README.md head is Vite boilerplate"
+    },
+    {
+      "phase": "f8_presentation_assets",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "no submission/ dir, no mp4/mov, no cover image"
+    },
+    {
+      "phase": "scoring",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "raw 47/100; 3 kill-zones triggered = EMERGENCY escalation"
+    },
+    {
+      "phase": "feature_observables",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "SKIPPED: FEATURE-OBSERVABLES.md not found"
+    },
+    {
+      "phase": "critique_alignment",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "SKIPPED elevations (no .critique-state.json); P0 check run against the plan's 10 MUSTs, 4/10"
+    },
+    {
+      "phase": "report",
+      "completed_at": "2026-09-22T13:49:00.893712+00:00",
+      "evidence": "VERIFY-REPORT.md written, 342 lines"
+    }
+  ]
+}

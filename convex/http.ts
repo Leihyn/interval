@@ -19,13 +19,14 @@ http.route({
     const body = await request.json();
 
     const from: string | undefined = body.from ?? body.sender ?? body.envelope?.from;
-    const text: string | undefined = body.text ?? body.plain ?? body.body;
+    const text: string | undefined =
+      body.text ?? body.extracted_text ?? body.plain ?? body.body;
 
     if (!from || !text) {
       return new Response("Missing sender or body", { status: 400 });
     }
 
-    const result = await ctx.runMutation(api.replies.ingestReply, {
+    const result = await ctx.runAction(api.replies.submitReply, {
       email: String(from).toLowerCase().trim(),
       rawText: String(text),
       channel: "email",

@@ -8,10 +8,12 @@
  * @module
  */
 
+import type * as extract from "../extract.js";
 import type * as gate from "../gate.js";
 import type * as http from "../http.js";
 import type * as items from "../items.js";
 import type * as match from "../match.js";
+import type * as merge from "../merge.js";
 import type * as parse from "../parse.js";
 import type * as patients from "../patients.js";
 import type * as replies from "../replies.js";
@@ -25,10 +27,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  extract: typeof extract;
   gate: typeof gate;
   http: typeof http;
   items: typeof items;
   match: typeof match;
+  merge: typeof merge;
   parse: typeof parse;
   patients: typeof patients;
   replies: typeof replies;

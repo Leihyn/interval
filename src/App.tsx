@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import type { Id } from "../convex/_generated/dataModel";
 
@@ -22,7 +22,7 @@ export default function App() {
   const board = useQuery(api.replies.board);
   const patients = useQuery(api.patients.list);
   const seed = useMutation(api.seed.demo);
-  const ingest = useMutation(api.replies.ingestReply);
+  const ingest = useAction(api.replies.submitReply);
   const acknowledge = useMutation(api.replies.acknowledge);
 
   const [reply, setReply] = useState("");

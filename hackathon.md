@@ -93,3 +93,28 @@ Still not done: the `convex.site` deployment, which needs an account login, and 
 required submission field. Auth, Firecrawl citation crawling and the cron-driven missed check-in
 escalation are not built. The guideline citations on the demo items are real URLs typed by hand,
 not crawled.
+
+### 22 Sep, afternoon: the eligibility gap
+
+A preflight audit turned up the thing that mattered most, and it was not a bug. The hackathon
+rules require that a submission *"include Convex and use hackathon cohost or partner
+integrations"*, and that those tools do *"real work"* rather than *"merely appear in
+documentation."* Interval used none of the three partners. It was not a weak entry, it was an
+ineligible one.
+
+Worse, the submission copy written on 12 Sep described OpenAI doing the extraction, Firecrawl
+crawling the guidelines and AgentMail carrying the inbox. None of that had been built. The copy
+was written against the plan and never reconciled with the code.
+
+OpenAI extraction is now wired, and the shape it took is the interesting part. The model does not
+replace the deterministic parser, it sits above it. `convex/merge.ts` takes a model value only
+where the parser produced nothing, so a hallucination cannot overwrite a number the regex read
+correctly out of the text. The model is also never allowed to choose a unit: it reports only the
+unit the patient literally wrote, and that report goes through the same contradiction check as the
+parser's, so a disagreement with the issued unit still resolves to unresolved rather than to a
+conversion. Invariant 1 holds unchanged, because the prompt contains no threshold, no severity
+level and no notion of urgency.
+
+The fallback is tested and the primary path is not. With no key configured the whole pipeline runs
+on the parser alone and every level comes out correct, which is verified. The OpenAI call itself
+has never executed against a real key.

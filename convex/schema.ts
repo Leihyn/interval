@@ -79,6 +79,11 @@ export default defineSchema({
     reasons: v.array(v.string()),
     keywordHits: v.array(v.string()),
     extracted: v.optional(v.any()),
+    // Which layer produced the typed fields. Shown on the board so a clinician
+    // can see whether the model was involved in reading this reply.
+    extractionSource: v.optional(
+      v.union(v.literal("parser"), v.literal("model"), v.literal("merged")),
+    ),
     channel: v.union(v.literal("email"), v.literal("paste")),
     acknowledged: v.boolean(),
   })

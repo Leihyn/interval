@@ -51,6 +51,11 @@ export default defineSchema({
     // Every drafted item cites the guideline it came from.
     sourceUrl: v.optional(v.string()),
     sourceTitle: v.optional(v.string()),
+    // Filled by the Firecrawl crawl. A citation nobody checked is a claim, not
+    // a source: these record that the page was actually fetched, when, and the
+    // sentence the threshold came from.
+    sourceExcerpt: v.optional(v.string()),
+    sourceVerifiedAt: v.optional(v.number()),
     // Type-specific payload.
     measure: v.optional(
       v.union(

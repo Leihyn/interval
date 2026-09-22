@@ -8,8 +8,10 @@
  * @module
  */
 
+import type * as citation from "../citation.js";
 import type * as extract from "../extract.js";
 import type * as gate from "../gate.js";
+import type * as guidelines from "../guidelines.js";
 import type * as http from "../http.js";
 import type * as items from "../items.js";
 import type * as match from "../match.js";
@@ -27,8 +29,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  citation: typeof citation;
   extract: typeof extract;
   gate: typeof gate;
+  guidelines: typeof guidelines;
   http: typeof http;
   items: typeof items;
   match: typeof match;

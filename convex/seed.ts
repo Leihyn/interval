@@ -29,7 +29,7 @@ export const demo = mutation({
     const now = Date.now();
     const guideline = {
       sourceTitle: "NICE NG136: Hypertension in adults, diagnosis and management",
-      sourceUrl: "https://www.nice.org.uk/guidance/ng136",
+      sourceUrl: "https://www.nice.org.uk/guidance/ng136/chapter/Recommendations",
     };
 
     const items = [
@@ -49,7 +49,7 @@ export const demo = mutation({
         cadenceHours: 24,
         critical: false,
         sourceTitle: "NICE NG136: Hypertension in adults, diagnosis and management",
-        sourceUrl: "https://www.nice.org.uk/guidance/ng136",
+        sourceUrl: "https://www.nice.org.uk/guidance/ng136/chapter/Recommendations",
       },
       {
         type: "exercise" as const,
@@ -57,7 +57,7 @@ export const demo = mutation({
         detail: "Three sets of ten, within the agreed pain ceiling of 5/10. Report sets done and pain.",
         cadenceHours: 24,
         sourceTitle: "NICE NG157: Joint replacement, primary care rehabilitation",
-        sourceUrl: "https://www.nice.org.uk/guidance/ng157",
+        sourceUrl: "https://www.nice.org.uk/guidance/ng157/chapter/Recommendations",
       },
     ];
 
@@ -85,7 +85,7 @@ export const demo = mutation({
       measure: "glucose",
       unit: "mmol/L",
       sourceTitle: "NICE NG28: Type 2 diabetes in adults, management",
-      sourceUrl: "https://www.nice.org.uk/guidance/ng28",
+      sourceUrl: "https://www.nice.org.uk/guidance/ng28/chapter/Recommendations",
     });
 
     return { patientId, itemIds: ids };

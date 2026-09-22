@@ -162,9 +162,19 @@ function Items({ patientId }: { patientId: Id<"patients"> }) {
               <span className={`tag ${i.status}`}>{i.status}</span>
               <p className="hint">{i.detail}</p>
               {i.sourceUrl && (
-                <a className="source" href={i.sourceUrl} target="_blank" rel="noreferrer">
-                  {i.sourceTitle}
-                </a>
+                <div className="citation">
+                  <a className="source" href={i.sourceUrl} target="_blank" rel="noreferrer">
+                    {i.sourceTitle}
+                  </a>
+                  {i.sourceVerifiedAt ? (
+                    <span className="verified">
+                      source fetched {new Date(i.sourceVerifiedAt).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    <span className="unverified">source not yet fetched</span>
+                  )}
+                  {i.sourceExcerpt && <blockquote className="quote">{i.sourceExcerpt}</blockquote>}
+                </div>
               )}
             </div>
             <div className="row">

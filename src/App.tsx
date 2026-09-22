@@ -136,7 +136,7 @@ export default function App() {
 function Items({ patientId }: { patientId: Id<"patients"> }) {
   const items = useQuery(api.items.listForPatient, { patientId });
   const approve = useMutation(api.items.approve);
-  const issue = useMutation(api.items.issue);
+  const issue = useAction(api.email.issueAndSend);
   const [error, setError] = useState<string | null>(null);
 
   async function tryIssue(itemId: Id<"items">) {

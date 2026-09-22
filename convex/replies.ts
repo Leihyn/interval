@@ -149,6 +149,7 @@ export const submitReply = action({
     reasons: string[];
     extractionSource: ExtractionSource;
     autoReply: string;
+    autoReplySent: boolean;
   }> => {
     let modelExtraction = null;
 
@@ -162,12 +163,22 @@ export const submitReply = action({
       });
     }
 
-    return await ctx.runMutation(api.replies.ingestReply, {
+    const result = await ctx.runMutation(api.replies.ingestReply, {
       email,
       rawText,
       channel,
       modelExtraction,
     });
+
+    // One of exactly two fixed strings, chosen by the level that code decided.
+    // A send failure must never lose a check-in that is already recorded, so
+    // this is attempted after the write and its outcome is reported, not thrown.
+    const mail = await ctx.runAction(api.email.sendAutoReply, {
+      to: email,
+      level: result.level,
+    });
+
+    return { ...result, autoReplySent: mail.sent };
   },
 });
 

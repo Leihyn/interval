@@ -9,6 +9,7 @@
  */
 
 import type * as citation from "../citation.js";
+import type * as email from "../email.js";
 import type * as extract from "../extract.js";
 import type * as gate from "../gate.js";
 import type * as guidelines from "../guidelines.js";
@@ -30,6 +31,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   citation: typeof citation;
+  email: typeof email;
   extract: typeof extract;
   gate: typeof gate;
   guidelines: typeof guidelines;

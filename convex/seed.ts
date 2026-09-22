@@ -17,7 +17,7 @@ export const demo = mutation({
 
     const patientId = await ctx.db.insert("patients", {
       name: "A. Demo (synthetic record)",
-      email: "demo.patient@example.com",
+      email: process.env.DEMO_PATIENT_EMAIL ?? "onatola-6644@agentmail.to",
       clerkingNote:
         "62F, discharged day 4 post right total knee replacement. Background hypertension, " +
         "type 2 diabetes. Home with ramipril 5mg od and metformin 500mg bd. For daily BP " +

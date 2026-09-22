@@ -130,3 +130,53 @@ export const diagnose = action({
     }
   },
 });
+
+/**
+ * Registers the inbound webhook so a real reply reaches the board.
+ *
+ * Done over the API because AgentMail has no console UI for this. Idempotent
+ * in effect: listing first means re-running does not pile up duplicates.
+ */
+export const registerWebhook = action({
+  args: { url: v.string() },
+  handler: async (_ctx, { url }): Promise<Record<string, unknown>> => {
+    const key = process.env.AGENTMAIL_API_KEY;
+    if (!key) return { ok: false, detail: "no AGENTMAIL_API_KEY configured" };
+    const auth = { Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+
+    const existing = await fetch("https://api.agentmail.to/v0/webhooks", { headers: auth });
+    const existingBody = await existing.text();
+    if (existingBody.includes(url)) {
+      return { ok: true, alreadyRegistered: true, detail: existingBody.slice(0, 300) };
+    }
+
+    const res = await fetch("https://api.agentmail.to/v0/webhooks", {
+      method: "POST",
+      headers: auth,
+      body: JSON.stringify({
+        url,
+        event_types: ["message.received"],
+        inbox_ids: [INBOX()],
+        client_id: "interval-inbound",
+      }),
+    });
+    const text = await res.text();
+    if (!res.ok) console.error(`[agentmail] webhook create HTTP ${res.status}: ${text.slice(0, 300)}`);
+    return { ok: res.ok, status: res.status, detail: text.slice(0, 400) };
+  },
+});
+
+/** Lists what is actually sitting in the inbox. Diagnostic only. */
+export const listMessages = action({
+  args: {},
+  handler: async (): Promise<Record<string, unknown>> => {
+    const key = process.env.AGENTMAIL_API_KEY;
+    if (!key) return { ok: false };
+    const res = await fetch(
+      `https://api.agentmail.to/v0/inboxes/${encodeURIComponent(INBOX())}/messages?limit=5`,
+      { headers: { Authorization: `Bearer ${key}` } },
+    );
+    const text = await res.text();
+    return { status: res.status, body: text.slice(0, 700) };
+  },
+});

@@ -1,4 +1,52 @@
-# Interval: build log
+# Interval
+
+**Live app:** https://fearless-swordfish-992.convex.site
+**Repo:** https://github.com/Leihyn/interval
+**Video demo:** _link added on submission_
+**Built by:** Timilehin Faruq (solo), for the Convex All Gas Hackathon
+
+## What I built
+
+A clinic board that closes the gap between discharge and the next appointment. A clinician
+issues a home item, the patient executes it unobserved, and the patient reports back by
+replying to an ordinary email. The reply is stored raw, scanned for red flags, read into typed
+fields, triaged by code against a threshold table, and posted to a live board the same day.
+The patient installs nothing.
+
+One primitive, three payloads. An exercise item reports adherence and pain. A medication item
+reports taken or missed plus side effects. A vital item reports a number with a unit.
+
+## Stack
+
+| Layer | What it does here |
+|---|---|
+| **Convex** | Database with 5 indexes, queries, mutations, actions, an httpAction serving the inbound email webhook, live `useQuery` subscriptions driving the board, the static-hosting component serving the frontend from the same deployment on `convex.site` |
+| **OpenAI** | Extraction only. Free text to typed fields. Its prompt contains no threshold, no severity level and no notion of urgency |
+| **Firecrawl** | Fetches every cited clinical guideline, confirms the link resolves, records the real page title and pulls the sentence the threshold came from |
+| **AgentMail** | The patient transport. Sends the approved programme, receives the reply on a registered `message.received` webhook, returns one of exactly two fixed strings |
+
+Built with Claude Code as the coding agent, with the Convex agent plugin installed
+(`npx convex ai-files install`, see `AGENTS.md` and `convex/_generated/ai/guidelines.md`).
+
+## Verified on production, 22 September
+
+- Demo reliability: **5/5** consecutive runs, each from a clean reseed
+- OpenAI: reads "one eighty six over one oh four" into a systolic and diastolic, returns RED
+- Firecrawl: **4/4** guideline pages fetched, 0 failures
+- AgentMail: programme sent 200, auto-reply sent 200, inbound webhook 200 and on the board
+- **87 tests** passing, written around misses rather than false alarms
+
+## The one rule everything else follows
+
+The model extracts. Code triages.
+
+The obvious build lets a model read a reply and decide how urgent it is. That is one prompt and
+it works most of the time. Most of the time is the wrong bar when the output decides whether a
+clinician sees a reading today.
+
+---
+
+# Build log
 
 **Convex All Gas Hackathon.** Started 12 September 2026.
 

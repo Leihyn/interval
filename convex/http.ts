@@ -18,9 +18,12 @@ http.route({
   handler: httpAction(async (ctx, request) => {
     const body = await request.json();
 
-    const from: string | undefined = body.from ?? body.sender ?? body.envelope?.from;
+    // A webhook event nests the message; a direct post does not. Read both,
+    // because guessing one shape is how an integration dies silently.
+    const msg = body.message ?? body.data ?? body;
+    const from: string | undefined = msg.from ?? msg.sender ?? msg.envelope?.from;
     const text: string | undefined =
-      body.text ?? body.extracted_text ?? body.plain ?? body.body;
+      msg.text ?? msg.extracted_text ?? msg.plain ?? msg.body;
 
     if (!from || !text) {
       return new Response("Missing sender or body", { status: 400 });

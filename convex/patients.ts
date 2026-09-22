@@ -24,3 +24,18 @@ export const create = mutation({
   },
   handler: async (ctx, args) => await ctx.db.insert("patients", args),
 });
+
+/**
+ * Repoints the demo patient at a real address, so an external reply to the
+ * clinic inbox matches a patient and reaches the board. Does not touch the
+ * board, unlike reseeding.
+ */
+export const setEmail = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    const patient = (await ctx.db.query("patients").collect())[0];
+    if (!patient) throw new Error("No patient to update");
+    await ctx.db.patch(patient._id, { email: email.toLowerCase().trim() });
+    return { patientId: patient._id, email: email.toLowerCase().trim() };
+  },
+});

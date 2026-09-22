@@ -31,3 +31,9 @@ dist-ssr
 .agents/
 .claude/
 skills-lock.json
+
+# Internal audit/pipeline artifacts, not project documentation
+VERIFY-REPORT.md
+.verify-state.json
+PULSE.md
+pipeline-log.md

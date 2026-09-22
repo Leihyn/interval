@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { mergeVital, mergeMedication, mergeExercise } from "./merge";
+import { mergeVital, mergeMedication, mergeExercise, unwrapExtraction } from "./merge";
 import { triage } from "./triage";
 
 describe("the parser is the floor, the model never overwrites it", () => {
@@ -73,5 +73,36 @@ describe("medication and exercise merging", () => {
     );
     expect(report.pain).toBe(8);
     expect(source).toBe("merged");
+  });
+});
+
+describe("model payload shape is normalised, not assumed", () => {
+  it("reads fields nested under the item type", () => {
+    const out = unwrapExtraction({ vital: { systolic: 186, diastolic: 104 } }, "vital");
+    expect(out).toEqual({ systolic: 186, diastolic: 104 });
+  });
+
+  it("reads fields at the top level", () => {
+    const out = unwrapExtraction({ systolic: 186, diastolic: 104 }, "vital");
+    expect(out).toEqual({ systolic: 186, diastolic: 104 });
+  });
+
+  it("does not unwrap a key belonging to a different item type", () => {
+    const out = unwrapExtraction({ taken: true }, "medication");
+    expect(out).toEqual({ taken: true });
+  });
+
+  it("rejects a non-object payload", () => {
+    expect(unwrapExtraction(null, "vital")).toBeNull();
+    expect(unwrapExtraction("nope", "vital")).toBeNull();
+    expect(unwrapExtraction([1, 2], "vital")).toBeNull();
+  });
+
+  it("survives the nested shape end to end", () => {
+    const parsed = { measure: "bp" as const, unit: "mmHg" as const, systolic: null, diastolic: null };
+    const model = unwrapExtraction({ vital: { systolic: 186, diastolic: 104, unitStated: null } }, "vital");
+    const { reading, source } = mergeVital(parsed, model, "mmHg", false);
+    expect(reading.systolic).toBe(186);
+    expect(source).toBe("model");
   });
 });

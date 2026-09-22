@@ -1,5 +1,6 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
+import { unwrapExtraction } from "./merge";
 
 /**
  * OpenAI extraction: free text to typed fields.
@@ -24,6 +25,8 @@ const SYSTEM = `You read a patient's plain-language reply to a clinician-issued 
 You are an extraction tool ONLY. You do not assess urgency, severity, risk, or whether anything is normal or abnormal. You do not give advice. You never mention thresholds. Report only what the patient actually wrote.
 
 Return strict JSON. Use null for anything the patient did not state. Never guess a number that is not in the text.
+
+Return the fields at the TOP LEVEL of the JSON object. Do not nest them under a key.
 
 Fields, by item type:
 
@@ -76,14 +79,22 @@ export const extractReply = action({
         }),
       });
 
-      if (!res.ok) return null;
+      if (!res.ok) {
+        // Never logs the key. Status and a truncated body only.
+        const detail = (await res.text()).slice(0, 300);
+        console.error(`[extract] OpenAI HTTP ${res.status}: ${detail}`);
+        return null;
+      }
       const body = await res.json();
       const content = body?.choices?.[0]?.message?.content;
-      if (typeof content !== "string") return null;
-      const parsed = JSON.parse(content);
-      return typeof parsed === "object" && parsed !== null ? parsed : null;
-    } catch {
+      if (typeof content !== "string") {
+        console.error(`[extract] unexpected response shape: ${JSON.stringify(body).slice(0, 300)}`);
+        return null;
+      }
+      return unwrapExtraction(JSON.parse(content), itemType);
+    } catch (err) {
       // Any failure at all falls through to the deterministic parser.
+      console.error(`[extract] threw: ${err instanceof Error ? err.message : String(err)}`);
       return null;
     }
   },

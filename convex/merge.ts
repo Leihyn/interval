@@ -15,6 +15,29 @@ import type { VitalReading, MedicationReport, ExerciseReport, VitalUnit } from "
 
 export type ExtractionSource = "parser" | "model" | "merged";
 
+/**
+ * Normalises the model's payload shape.
+ *
+ * The prompt asks for the fields at the top level, but a prompt is a request
+ * rather than a contract: the model also returns them nested under the item
+ * type, e.g. {"vital": {"systolic": 186}}. Reading only one shape means a shape
+ * change silently disables extraction and everything still looks healthy,
+ * because the deterministic parser quietly covers for it. Accept both.
+ */
+export function unwrapExtraction(
+  parsed: unknown,
+  itemType: "exercise" | "medication" | "vital",
+): Record<string, unknown> | null {
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return null;
+  const obj = parsed as Record<string, unknown>;
+
+  const nested = obj[itemType];
+  if (nested && typeof nested === "object" && !Array.isArray(nested)) {
+    return nested as Record<string, unknown>;
+  }
+  return obj;
+}
+
 /** Takes b only where a is null/undefined. Returns whether b contributed. */
 function fill<T>(a: T | null | undefined, b: T | null | undefined): [T | null, boolean] {
   if (a !== null && a !== undefined) return [a, false];
